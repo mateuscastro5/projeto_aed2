@@ -1,11 +1,13 @@
 from ocorrencia import Ocorrencia
 from fila import Fila
 from pilha import Pilha
+from heap import HeapPrioridade
 
 
 ocorrencias = []
 fila = Fila()
 historico = Pilha()
+heap = HeapPrioridade()
 
 
 def gerar_id(nome):
@@ -42,6 +44,7 @@ def cadastrar_ocorrencia():
     nova = Ocorrencia(id_ocorrencia, nome, tipo, descricao, prioridade, ordem)
     ocorrencias.append(nova)
     fila.enfileirar(nova)
+    heap.inserir(nova)
     historico.empilhar("Cadastro da ocorrência " + nova.id)
 
     print("\nOcorrência cadastrada!")
@@ -80,6 +83,21 @@ def atender_por_chegada():
     mostrar_ocorrencia(oc)
 
 
+def atender_por_prioridade():
+    print("\nATENDER POR MAIOR PRIORIDADE")
+
+    if heap.esta_vazia():
+        print("Não há ocorrências na fila de prioridade.")
+        return
+
+    oc = heap.remover_maior()
+    oc.status = "Atendido"
+    historico.empilhar("Atendimento por prioridade da ocorrência " + oc.id)
+
+    print("Atendendo ocorrência mais crítica:")
+    mostrar_ocorrencia(oc)
+
+
 def ver_historico():
     print("\nHISTÓRICO DE AÇÕES")
 
@@ -107,8 +125,9 @@ while True:
     print("1 - Cadastrar ocorrência")
     print("2 - Listar ocorrências")
     print("3 - Atender próxima ocorrência (ordem de chegada)")
-    print("4 - Ver histórico de ações")
-    print("5 - Desfazer última ação")
+    print("4 - Atender ocorrência de maior prioridade")
+    print("5 - Ver histórico de ações")
+    print("6 - Desfazer última ação")
     print("0 - Sair")
 
     opcao = input("Escolha uma opção: ")
@@ -120,8 +139,10 @@ while True:
     elif opcao == "3":
         atender_por_chegada()
     elif opcao == "4":
-        ver_historico()
+        atender_por_prioridade()
     elif opcao == "5":
+        ver_historico()
+    elif opcao == "6":
         desfazer_ultima_acao()
     elif opcao == "0":
         print("Saindo...")
