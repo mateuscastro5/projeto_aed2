@@ -4,6 +4,7 @@ from pilha import Pilha
 from heap import HeapPrioridade
 from arvore import ArvoreBusca
 from hash_table import HashTable
+from ordenacao import ordenar
 
 
 ocorrencias = []
@@ -35,14 +36,7 @@ def ler_prioridade():
         print("Valor inválido. Digite um número de 1 a 5.")
 
 
-def cadastrar_ocorrencia():
-    print("\nCADASTRAR OCORRÊNCIA")
-
-    nome = input("Nome do requisitante: ")
-    tipo = input("Tipo da ocorrência: ")
-    descricao = input("Descrição: ")
-    prioridade = ler_prioridade()
-
+def registrar_ocorrencia(nome, tipo, descricao, prioridade):
     id_ocorrencia = gerar_id(nome)
     ordem = len(ocorrencias) + 1
 
@@ -54,6 +48,19 @@ def cadastrar_ocorrencia():
     indice_nome.inserir(nome, nova)
     indice_tipo.inserir(tipo, nova)
     historico.empilhar("Cadastro da ocorrência " + nova.id)
+
+    return nova
+
+
+def cadastrar_ocorrencia():
+    print("\nCADASTRAR OCORRÊNCIA")
+
+    nome = input("Nome do requisitante: ")
+    tipo = input("Tipo da ocorrência: ")
+    descricao = input("Descrição: ")
+    prioridade = ler_prioridade()
+
+    nova = registrar_ocorrencia(nome, tipo, descricao, prioridade)
 
     print("\nOcorrência cadastrada!")
     print("ID:", nova.id)
@@ -145,6 +152,54 @@ def buscar_por_nome_ou_tipo():
         mostrar_ocorrencia(oc)
 
 
+def ordenar_ocorrencias():
+    print("\nORDENAR OCORRÊNCIAS")
+
+    if len(ocorrencias) == 0:
+        print("Nenhuma ocorrência cadastrada ainda.")
+        return
+
+    print("1 - Por ID (em ordem na árvore de busca)")
+    print("2 - Por prioridade (ordenação manual)")
+    print("3 - Por nome (ordenação manual)")
+    escolha = input("Escolha: ")
+
+    if escolha == "1":
+        ordenadas = arvore.em_ordem()
+    elif escolha == "2":
+        ordenadas = ordenar(ocorrencias, "prioridade")
+    elif escolha == "3":
+        ordenadas = ordenar(ocorrencias, "nome")
+    else:
+        print("Opção inválida.")
+        return
+
+    for oc in ordenadas:
+        mostrar_ocorrencia(oc)
+
+
+def gerar_massa_de_testes():
+    print("\nGERAR MASSA DE TESTES")
+
+    exemplos = [
+        ("Ana Souza", "Laboratório", "Computador não liga", 5),
+        ("Bruno Dias", "Documento", "Segunda via do histórico", 2),
+        ("Carla Nunes", "Reserva de sala", "Sala 12 para seminário", 3),
+        ("Diego Alves", "Laboratório", "Projetor sem imagem", 4),
+        ("Elaine Rocha", "Suporte", "Sem acesso ao portal", 1),
+        ("Fábio Lima", "Empréstimo", "Notebook para a aula", 3),
+        ("Gabriela Mota", "Laboratório", "Teclado quebrado", 2),
+        ("Hugo Pires", "Documento", "Declaração de matrícula", 5),
+    ]
+
+    for nome, tipo, descricao, prioridade in exemplos:
+        registrar_ocorrencia(nome, tipo, descricao, prioridade)
+
+    print(len(exemplos), "ocorrências de exemplo cadastradas.")
+    print("Colisões na hash de nomes:", indice_nome.colisoes)
+    print("Colisões na hash de tipos:", indice_tipo.colisoes)
+
+
 def ver_historico():
     print("\nHISTÓRICO DE AÇÕES")
 
@@ -175,8 +230,10 @@ while True:
     print("4 - Atender por maior prioridade (heap - req 6.4)")
     print("5 - Buscar ocorrência por ID (árvore de busca - req 6.5)")
     print("6 - Buscar por nome ou tipo (hash table - req 6.6)")
-    print("7 - Ver histórico de ações (pilha - req 6.8)")
-    print("8 - Desfazer última ação (pilha - req 6.9)")
+    print("7 - Ordenar ocorrências (ordenação manual - req 6.7)")
+    print("8 - Ver histórico de ações (pilha - req 6.8)")
+    print("9 - Desfazer última ação (pilha - req 6.9)")
+    print("10 - Gerar massa de testes (popula o sistema - extra)")
     print("0 - Sair")
 
     opcao = input("Escolha uma opção: ")
@@ -194,9 +251,13 @@ while True:
     elif opcao == "6":
         buscar_por_nome_ou_tipo()
     elif opcao == "7":
-        ver_historico()
+        ordenar_ocorrencias()
     elif opcao == "8":
+        ver_historico()
+    elif opcao == "9":
         desfazer_ultima_acao()
+    elif opcao == "10":
+        gerar_massa_de_testes()
     elif opcao == "0":
         print("Saindo...")
         break

@@ -39,3 +39,16 @@ class ArvoreBusca:
                 no = no.direita
 
         return None
+
+    def em_ordem(self):
+        resultado = []
+        self._em_ordem(self.raiz, resultado)
+        return resultado
+
+    def _em_ordem(self, no, resultado):
+        if no is None:
+            return
+
+        self._em_ordem(no.esquerda, resultado)
+        resultado.append(no.ocorrencia)
+        self._em_ordem(no.direita, resultado)
