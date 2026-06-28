@@ -35,17 +35,53 @@ O próprio menu mostra a estrutura e o requisito em cada linha. Resumo:
 Na opção 7, ordenar por ID reaproveita o caminhamento em ordem da árvore de busca
 (já sai ordenado); por prioridade e por nome usa um insertion sort feito à mão.
 
-## Onde cada estrutura aparece (Seção 12 do enunciado)
+## Perguntas obrigatórias
 
-- **Fila** (`fila.py`): atendimento por ordem de chegada (opção 3).
-- **Pilha** (`pilha.py`): histórico de ações e desfazer (opções 6 e 7).
-- **Árvore** (`arvore.py`): busca de ocorrência por ID (opção 5).
-- **Heap** (`heap.py`): atendimento pela maior prioridade (opção 4).
-- **Hash table** (`hash_table.py`): busca por nome ou tipo (opção 6).
-- **Ordenação manual** (`ordenacao.py`): insertion sort para ordenar por
-  prioridade ou nome (opção 7).
+**Onde foi usada a fila?**
+No atendimento por ordem de chegada (opção 3). A fila (`fila.py`) é encadeada,
+então quem é cadastrado primeiro é o primeiro a sair quando se atende por chegada.
 
-As demais perguntas obrigatórias serão respondidas ao final do projeto.
+**Onde foi usada a pilha?**
+No histórico de ações e no desfazer (opções 8 e 9). Cada cadastro e cada
+atendimento empilham um registro em `pilha.py`; o desfazer remove o do topo.
+
+**Onde foi usada a árvore?**
+Na busca de ocorrência por ID (opção 5), com o ID como chave da BST (`arvore.py`).
+Ela ainda é reaproveitada na ordenação por ID (opção 7), porque o caminhamento
+em ordem da árvore já devolve as ocorrências ordenadas pelo ID.
+
+**Onde foi usada a heap?**
+No atendimento pela maior prioridade (opção 4). A heap (`heap.py`) é de máximo,
+então o topo é sempre a ocorrência mais crítica; em empate de prioridade, sai
+primeiro quem chegou antes.
+
+**Onde foi usada a hash table?**
+Na busca por nome do solicitante ou por tipo (opção 6). São dois índices em
+`hash_table.py`, e o valor de cada chave é a lista de ocorrências daquele nome
+ou tipo.
+
+**Qual algoritmo de ordenação foi implementado?**
+Insertion sort, escrito à mão em `ordenacao.py`, usado para ordenar por
+prioridade e por nome. A ordenação por ID é feita pelo caminhamento em ordem da
+árvore, sem precisar de algoritmo extra.
+
+**Qual estrutura foi mais adequada para busca rápida?**
+A hash table, para buscar por nome ou tipo: o acesso é praticamente direto
+(tempo médio constante), bem melhor do que varrer a lista inteira. Para a busca
+exata por ID, a árvore de busca também é eficiente (proporcional à altura da
+árvore), enquanto a busca linear na lista seria a mais lenta das três.
+
+**Qual estrutura foi mais adequada para atendimento por prioridade?**
+A heap, sem dúvida. Ela mantém a ocorrência de maior prioridade sempre no topo,
+e inserir ou remover custa tempo logarítmico, sem precisar reordenar tudo a cada
+atendimento.
+
+**Qual foi a maior dificuldade?**
+Manter todas as estruturas sincronizadas no cadastro — uma única ocorrência
+precisa entrar em seis lugares ao mesmo tempo (lista, fila, heap, árvore e os
+dois índices da hash), além de registrar a ação na pilha. Resolvi centralizando
+isso na função `registrar_ocorrencia`, para não esquecer nenhuma estrutura.
+A outra parte trabalhosa foi acertar a lógica de subir/descer da heap.
 
 ## Detalhe sobre o ID
 
