@@ -9,7 +9,43 @@ class Ocorrencia:
         self.status = "Aberto"
 
 
+class NoFila:
+    def __init__(self, ocorrencia):
+        self.ocorrencia = ocorrencia
+        self.proximo = None
+
+
+class Fila:
+    def __init__(self):
+        self.inicio = None
+        self.fim = None
+
+    def enfileirar(self, ocorrencia):
+        no = NoFila(ocorrencia)
+        if self.fim is None:
+            self.inicio = no
+            self.fim = no
+        else:
+            self.fim.proximo = no
+            self.fim = no
+
+    def desenfileirar(self):
+        if self.inicio is None:
+            return None
+
+        no = self.inicio
+        self.inicio = no.proximo
+        if self.inicio is None:
+            self.fim = None
+
+        return no.ocorrencia
+
+    def esta_vazia(self):
+        return self.inicio is None
+
+
 ocorrencias = []
+fila = Fila()
 
 
 def gerar_id(nome):
@@ -45,6 +81,7 @@ def cadastrar_ocorrencia():
 
     nova = Ocorrencia(id_ocorrencia, nome, tipo, descricao, prioridade, ordem)
     ocorrencias.append(nova)
+    fila.enfileirar(nova)
 
     print("\nOcorrência cadastrada!")
     print("ID:", nova.id)
@@ -67,10 +104,25 @@ def listar_ocorrencias():
         mostrar_ocorrencia(oc)
 
 
+def atender_por_chegada():
+    print("\nATENDER POR ORDEM DE CHEGADA")
+
+    if fila.esta_vazia():
+        print("Não há ocorrências aguardando na fila.")
+        return
+
+    oc = fila.desenfileirar()
+    oc.status = "Atendido"
+
+    print("Atendendo ocorrência mais antiga:")
+    mostrar_ocorrencia(oc)
+
+
 while True:
     print("\n===== SISTEMA DE OCORRÊNCIAS ACADÊMICAS =====")
     print("1 - Cadastrar ocorrência")
     print("2 - Listar ocorrências")
+    print("3 - Atender próxima ocorrência (ordem de chegada)")
     print("0 - Sair")
 
     opcao = input("Escolha uma opção: ")
@@ -79,6 +131,8 @@ while True:
         cadastrar_ocorrencia()
     elif opcao == "2":
         listar_ocorrencias()
+    elif opcao == "3":
+        atender_por_chegada()
     elif opcao == "0":
         print("Saindo...")
         break
