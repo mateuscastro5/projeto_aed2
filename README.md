@@ -91,6 +91,8 @@ na árvore de busca.
 
 ## Vídeo de demonstração
 
-https://github.com/user-attachments/assets/a140674d-21b1-4abf-92f1-b44398ae8cb8
+https://github.com/user-attachments/assets/dc5a0765-598b-4bb2-a8cc-904d41867e51
+
+
 
 
