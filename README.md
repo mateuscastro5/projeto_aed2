@@ -88,3 +88,9 @@ A outra parte trabalhosa foi acertar a lógica de subir/descer da heap.
 O ID não é digitado: é gerado a partir do nome do solicitante (`gerar_id`),
 no formato `PREFIXO-código` (ex.: `ANA-834`). É essa string que serve de chave
 na árvore de busca.
+
+## Vídeo de demonstração
+
+https://github.com/user-attachments/assets/a140674d-21b1-4abf-92f1-b44398ae8cb8
+
+
