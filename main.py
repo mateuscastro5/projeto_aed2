@@ -1,51 +1,11 @@
-class Ocorrencia:
-    def __init__(self, id_ocorrencia, nome, tipo, descricao, prioridade, ordem):
-        self.id = id_ocorrencia
-        self.nome = nome
-        self.tipo = tipo
-        self.descricao = descricao
-        self.prioridade = prioridade
-        self.ordem = ordem
-        self.status = "Aberto"
-
-
-class NoFila:
-    def __init__(self, ocorrencia):
-        self.ocorrencia = ocorrencia
-        self.proximo = None
-
-
-class Fila:
-    def __init__(self):
-        self.inicio = None
-        self.fim = None
-
-    def enfileirar(self, ocorrencia):
-        no = NoFila(ocorrencia)
-        if self.fim is None:
-            self.inicio = no
-            self.fim = no
-        else:
-            self.fim.proximo = no
-            self.fim = no
-
-    def desenfileirar(self):
-        if self.inicio is None:
-            return None
-
-        no = self.inicio
-        self.inicio = no.proximo
-        if self.inicio is None:
-            self.fim = None
-
-        return no.ocorrencia
-
-    def esta_vazia(self):
-        return self.inicio is None
+from ocorrencia import Ocorrencia
+from fila import Fila
+from pilha import Pilha
 
 
 ocorrencias = []
 fila = Fila()
+historico = Pilha()
 
 
 def gerar_id(nome):
@@ -82,6 +42,7 @@ def cadastrar_ocorrencia():
     nova = Ocorrencia(id_ocorrencia, nome, tipo, descricao, prioridade, ordem)
     ocorrencias.append(nova)
     fila.enfileirar(nova)
+    historico.empilhar("Cadastro da ocorrência " + nova.id)
 
     print("\nOcorrência cadastrada!")
     print("ID:", nova.id)
@@ -113,9 +74,32 @@ def atender_por_chegada():
 
     oc = fila.desenfileirar()
     oc.status = "Atendido"
+    historico.empilhar("Atendimento por chegada da ocorrência " + oc.id)
 
     print("Atendendo ocorrência mais antiga:")
     mostrar_ocorrencia(oc)
+
+
+def ver_historico():
+    print("\nHISTÓRICO DE AÇÕES")
+
+    if historico.esta_vazia():
+        print("Nenhuma ação registrada ainda.")
+        return
+
+    for acao in historico.listar():
+        print("-", acao)
+
+
+def desfazer_ultima_acao():
+    print("\nDESFAZER ÚLTIMA AÇÃO")
+
+    if historico.esta_vazia():
+        print("Não há ações para desfazer.")
+        return
+
+    acao = historico.desempilhar()
+    print("Ação removida do histórico:", acao)
 
 
 while True:
@@ -123,6 +107,8 @@ while True:
     print("1 - Cadastrar ocorrência")
     print("2 - Listar ocorrências")
     print("3 - Atender próxima ocorrência (ordem de chegada)")
+    print("4 - Ver histórico de ações")
+    print("5 - Desfazer última ação")
     print("0 - Sair")
 
     opcao = input("Escolha uma opção: ")
@@ -133,6 +119,10 @@ while True:
         listar_ocorrencias()
     elif opcao == "3":
         atender_por_chegada()
+    elif opcao == "4":
+        ver_historico()
+    elif opcao == "5":
+        desfazer_ultima_acao()
     elif opcao == "0":
         print("Saindo...")
         break
