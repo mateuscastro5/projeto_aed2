@@ -2,12 +2,14 @@ from ocorrencia import Ocorrencia
 from fila import Fila
 from pilha import Pilha
 from heap import HeapPrioridade
+from arvore import ArvoreBusca
 
 
 ocorrencias = []
 fila = Fila()
 historico = Pilha()
 heap = HeapPrioridade()
+arvore = ArvoreBusca()
 
 
 def gerar_id(nome):
@@ -45,6 +47,7 @@ def cadastrar_ocorrencia():
     ocorrencias.append(nova)
     fila.enfileirar(nova)
     heap.inserir(nova)
+    arvore.inserir(nova)
     historico.empilhar("Cadastro da ocorrência " + nova.id)
 
     print("\nOcorrência cadastrada!")
@@ -98,6 +101,20 @@ def atender_por_prioridade():
     mostrar_ocorrencia(oc)
 
 
+def buscar_por_id():
+    print("\nBUSCAR OCORRÊNCIA POR ID")
+
+    id_procurado = input("Digite o ID da ocorrência: ")
+    oc = arvore.buscar(id_procurado)
+
+    if oc is None:
+        print("Nenhuma ocorrência encontrada com esse ID.")
+        return
+
+    print("Resultado:")
+    mostrar_ocorrencia(oc)
+
+
 def ver_historico():
     print("\nHISTÓRICO DE AÇÕES")
 
@@ -122,12 +139,13 @@ def desfazer_ultima_acao():
 
 while True:
     print("\n===== SISTEMA DE OCORRÊNCIAS ACADÊMICAS =====")
-    print("1 - Cadastrar ocorrência")
-    print("2 - Listar ocorrências")
-    print("3 - Atender próxima ocorrência (ordem de chegada)")
-    print("4 - Atender ocorrência de maior prioridade")
-    print("5 - Ver histórico de ações")
-    print("6 - Desfazer última ação")
+    print("1 - Cadastrar ocorrência (lista, fila, heap, árvore e pilha - req 6.1)")
+    print("2 - Listar ocorrências (lista geral - req 6.2)")
+    print("3 - Atender por ordem de chegada (fila - req 6.3)")
+    print("4 - Atender por maior prioridade (heap - req 6.4)")
+    print("5 - Buscar ocorrência por ID (árvore de busca - req 6.5)")
+    print("6 - Ver histórico de ações (pilha - req 6.8)")
+    print("7 - Desfazer última ação (pilha - req 6.9)")
     print("0 - Sair")
 
     opcao = input("Escolha uma opção: ")
@@ -141,8 +159,10 @@ while True:
     elif opcao == "4":
         atender_por_prioridade()
     elif opcao == "5":
-        ver_historico()
+        buscar_por_id()
     elif opcao == "6":
+        ver_historico()
+    elif opcao == "7":
         desfazer_ultima_acao()
     elif opcao == "0":
         print("Saindo...")
